@@ -1,10 +1,18 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import requests
+import os
+from dotenv import load_dotenv
+
+# Carrega variáveis de ambiente do arquivo .env
+load_dotenv()
 
 app = FastAPI(title="Consulta a previsão do tempo básica (temperatura & chuva) para a latitude/longitude fornecidas.")
 
-OPENMETEO_URL = "https://api.open-meteo.com/v1/forecast"
+# Obtém variáveis de ambiente
+OPENMETEO_URL = os.getenv("OPENMETEO_URL")
+API_HOST = os.getenv("API_HOST", "127.0.0.1")
+API_PORT = os.getenv("API_PORT", "8000")
 
 class ForecastRequest(BaseModel):
     latitude: float
@@ -22,7 +30,11 @@ def get_forecast(req: ForecastRequest):
         "hourly": "temperature_2m,precipitation",
         "timezone": "auto"
     }
-    resp = requests.get(OPENMETEO_URL, params=params)
+    # Desativa a verificação SSL para fins de teste
+    resp = requests.get(OPENMETEO_URL, params=params, verify=False)
+    # Suprime avisos relacionados à desativação da verificação SSL
+    import warnings
+    warnings.filterwarnings("ignore", message="Unverified HTTPS request")
     if resp.status_code != 200:
         raise HTTPException(status_code=resp.status_code, detail=resp.text)
     data = resp.json()
@@ -36,3 +48,5 @@ def get_forecast(req: ForecastRequest):
             "precipitation": data["hourly"]["precipitation"][:24]
         }
     }
+
+

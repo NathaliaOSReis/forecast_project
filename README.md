@@ -44,54 +44,122 @@ Antes de rodar a aplicação, você precisa ter:
 
 - Ambiente virtual (opcional, mas recomendado)
 
+## 🔐 Configuração das Variáveis de Ambiente e Credenciais Sigilosas
+
+O projeto utiliza variáveis de ambiente para armazenar configurações sensíveis e credenciais. Para configurá-las:
+
+1. **Crie um arquivo `.env` na raiz do projeto** (um arquivo de exemplo `.env.example` está disponível como referência)
+
+2. **Adicione as seguintes variáveis ao arquivo `.env`**:
+```
+# Configurações da API Open-Meteo
+OPENMETEO_URL=https://api.open-meteo.com/v1/forecast
+
+# Configurações do servidor FastAPI
+API_HOST=127.0.0.1
+API_PORT=8000
+
+# Credenciais e chaves de API (mantenha estas informações sigilosas)
+API_KEY=sua_chave_api_secreta_aqui
+API_SECRET=seu_segredo_api_aqui
+DATABASE_URL=mysql://usuario:senha@localhost:3306/nome_do_banco
+JWT_SECRET=chave_jwt_muito_secreta_e_longa
+
+# Variáveis de ambiente para serviços externos
+WEATHER_API_KEY=sua_chave_api_clima_aqui
+MAPS_API_KEY=sua_chave_api_mapas_aqui
+```
+
+3. **Boas práticas para manter credenciais seguras**:
+   - O arquivo `.env` já está no `.gitignore` para proteger suas credenciais
+   - **NUNCA** compartilhe ou cometa seu arquivo `.env` no repositório
+   - **NUNCA** armazene credenciais diretamente no código-fonte
+   - Ao adicionar novas variáveis de ambiente, atualize também o `.env.example` (sem valores reais)
+   - Em ambientes de produção, considere usar serviços de gerenciamento de segredos como:
+     - AWS Secrets Manager
+     - HashiCorp Vault
+     - Docker Swarm Secrets ou Kubernetes Secrets
+   - Para projetos em equipe, compartilhe credenciais por canais seguros (não por e-mail ou mensagens)
+   - Considere rotacionar chaves e segredos periodicamente
+
+4. **Uso com Docker**:
+   - O `docker-compose.yml` está configurado para carregar automaticamente as variáveis do arquivo `.env`
+   - As variáveis são injetadas nos contêineres durante a inicialização
+   - Para adicionar novas variáveis, atualize o arquivo `docker-compose.yml` conforme necessário
+
 ## 🛠 Como Abrir e Executar Esse Projeto
+
+### Método 1: Execução Local (sem Docker)
 
 1. **Clone o repositório**:
 ```
 git clone https://github.com/seu-usuario/forecast_project.git
 cd forecast_project
-
 ```
+
 2. **(Opcional) Crie e ative um ambiente virtual**:
 * No Windows
 ```
 python -m venv venv
 venv\Scripts\activate
-
 ```
 * No Linux
 ```
 python3 -m venv venv
 source venv/bin/activate
-
 ```
+
 3. **Instale as dependências**:
 ```
 pip install -r requirements.txt
-
 ```
-4. **Inicie a API (FastAPI)**:
+
+4. **Configure as variáveis de ambiente**:
+```
+# Crie um arquivo .env na raiz do projeto (use .env.example como referência)
+```
+
+5. **Inicie a API (FastAPI)**:
 ```
 uvicorn api.main:app --reload
-
 ```
 - A API estará disponível em: ```http://127.0.0.1:8000```
-
 - Você pode acessar a documentação automática da API em: ```http://127.0.0.1:8000/docs```
 
-5. **Em outro terminal, execute a interface (Streamlit)**:
-* Se estiver com o ambiente virtual ativado ainda
+6. **Em outro terminal, execute a interface (Streamlit)**:
 ```
 streamlit run app_streamlit.py
-
 ```
-* A interface abrirá automaticamente em seu navegador em: ```http://localhost:8501```
+- A interface abrirá automaticamente em seu navegador em: ```http://localhost:8501```
 
+### Método 2: Execução com Docker (recomendado)
+
+1. **Clone o repositório**:
+```
+git clone https://github.com/seu-usuario/forecast_project.git
+cd forecast_project
+```
+
+2. **Construa e inicie os containers**:
+```
+docker-compose up -d --build
+```
+
+3. **Acesse as aplicações**:
+- API FastAPI: ```http://localhost:8000```
+- Documentação da API: ```http://localhost:8000/docs```
+- Interface Streamlit: ```http://localhost:8501```
+
+4. **Para parar os containers**:
+```
+docker-compose down
+```
 
 ### 💡 Dicas Extras
-Se a interface não abrir automaticamente, copie o link mostrado no terminal (geralmente ```http://localhost:8501```) e cole no navegador.
-
-Para parar a aplicação, pressione ```CTRL+C``` nos dois terminais.
+- Se a interface não abrir automaticamente, copie o link mostrado no terminal (geralmente ```http://localhost:8501```) e cole no navegador.
+- Para parar a aplicação local, pressione ```CTRL+C``` nos terminais.
+- No Docker, você pode visualizar os logs com ```docker-compose logs -f``` ou ```docker-compose logs -f [serviço]``` para um serviço específico.
+- Se estiver usando Docker e precisar reiniciar apenas um serviço: ```docker-compose restart [serviço]```
 ## 🏗️ Arquitetura da Aplicação
 
 - Usuário acessa o app → Streamlit
@@ -116,6 +184,11 @@ forecast_project/
 ├── assets/
 │    ├── clima_api_teste.gif       # Gif mostrando o projeto em execução.
 │    └── fluxograma_da_aplicacao.png  # Arquitetura da aplicação.
+├── .dockerignore                  # Arquivos a serem ignorados pelo Docker
+├── .env                           # Arquivo de variáveis de ambiente (não versionado)
+├── .env.example                   # Exemplo de configuração de variáveis de ambiente
+├── Dockerfile                     # Instruções para construção da imagem Docker
+├── docker-compose.yml             # Configuração dos serviços Docker
 ├── README.md                      # Documentação do projeto.
 ├── app_streamlit.py               # Interface web com Streamlit.
 ├── LICENSE                        # Arquivo de licença proprietária do projeto.
@@ -132,3 +205,8 @@ O uso, modificação e distribuição deste software são estritamente proibidos
 ## 👩‍💻 Responsável Pelo Projeto
 
 [<img loading="lazy" src="https://avatars.githubusercontent.com/u/101699095?v=4" width=115><br><sub>Nathalia Reis</sub>](https://github.com/NathaliaOSReis)
+
+
+
+
+

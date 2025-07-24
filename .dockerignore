@@ -1,0 +1,47 @@
+# Arquivos Git
+.git
+.gitignore
+
+# Arquivos Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Arquivos de ambiente
+.env
+.env.*
+!.env.example
+
+# Arquivos Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Arquivos de mídia grandes
+*.mp4
+*.wmv
+*.avi
+*.mov
+
+# Outros
+.DS_Store
+.idea/
+.vscode/
+
