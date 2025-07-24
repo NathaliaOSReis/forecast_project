@@ -7,7 +7,7 @@
 
 ## ⚙️Versão
 
-Atualmente está disponível a **Versão 1.0.0** do presente projeto, disponibilizada em Abril/2025.
+Atualmente está disponível a **Versão 1.0.0** do presente projeto, disponibilizada em Julho/2025.
 
 ## 📝 Descrição
 Este é um projeto simples e amigável para consultar a previsão do tempo de forma visual e acessível. O sistema utiliza uma interface web feita com Streamlit e uma API local em FastAPI, permitindo que o usuário digite o nome de uma cidade e visualize a previsão de temperatura e precipitação por hora.
